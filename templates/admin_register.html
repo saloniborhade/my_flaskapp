@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Register Admin User{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: auto; padding: 20px; background: #f8f8f8; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align:center;">➕ Add New User</h2>
+    <form method="POST" style="display: flex; flex-direction: column;">
+        <label for="username">👤 Username:</label>
+        <input type="text" id="username" name="username" required style="margin-bottom: 10px; padding: 8px;">
+
+        <label for="password">🔑 Password:</label>
+        <input type="password" id="password" name="password" required style="margin-bottom: 20px; padding: 8px;">
+
+        <button type="submit" style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Register</button>
+    </form>
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="{{ url_for('manage_users') }}">⬅ Back to Manage Users</a>
+    </div>
+</div>
+{% endblock %}

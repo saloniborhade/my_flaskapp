@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    .dashboard {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .dashboard p {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+    }
+
+    .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 35px;
+    }
+
+    .nav-links a {
+        padding: 12px 20px;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        background-color: #2980b9;
+    }
+
+    .cards {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        flex: 1 1 200px;
+        background-color: #ecf0f1;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h4 {
+        color: #34495e;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .expense-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .expense-table th, .expense-table td {
+        padding: 12px 15px;
+        text-align: center;
+    }
+
+    .expense-table th {
+        background-color: #2c3e50;
+        color: white;
+    }
+
+    .expense-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .expense-table tr:hover {
+        background-color: #eaf2f8;
+    }
+
+    .no-expense {
+        text-align: center;
+        margin-top: 20px;
+        color: #999;
+    }
+</style>
+
+<div class="dashboard">
+    <h2>Welcome, {{ user['username'] }}!</h2>
+    <p>Your role: <strong>{{ user['role'] }}</strong></p>
+
+    <div class="nav-links">
+        <a href="{{ url_for('add_expense') }}">➕ Add Expense</a>
+        <a href="{{ url_for('view_expenses') }}">📄 View Expenses</a>
+        {% if user['role'] == 'admin' %}
+            <a href="{{ url_for('manage_users') }}">🛠️ Manage Users</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h4>Total Expenses</h4>
+            <p>₹ {{ total_expense or '0.00' }}</p>
+        </div>
+        <div class="card">
+            <h4>This Month</h4>
+            <p>₹ {{ monthly_expense or '0.00' }}</p>
+        </div>
+        {% if user['role'] == 'admin' %}
+        <div class="card">
+            <h4>Registered Users</h4>
+            <p>{{ user_count or 0 }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <h3 style="color:#2c3e50;">Recent Expenses</h3>
+    {% if expenses %}
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Paid By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense['description'] }}</td>
+                        <td>₹ {{ expense['amount'] }}</td>
+                        <td>{{ expense['date'] }}</td>
+                        <td>{{ expense['paid_by'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-expense">No recent expenses found.</p>
+    {% endif %}
+</div>
+{% endblock %}
